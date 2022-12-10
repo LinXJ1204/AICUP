@@ -252,7 +252,7 @@ def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs):
             print(f'Epoch {epoch + 1}/{num_epochs} | {phase:^5} | Loss: {epoch_loss:.4f} | Acc: {epoch_acc:.4f}')
         if epoch_acc > best_acc:
             traced = torch.jit.trace(model.cpu(), torch.rand(1, 3, 224, 224))
-            traced.save('model3.pth')
+            traced.save('model4.pth')
             best_acc = epoch_acc
 
 num_blocks = [2, 2, 12, 28, 2]
@@ -264,6 +264,7 @@ BATCH_SIZE = 32
 
 
 transform_train = transforms.Compose([
+    transforms.RandomRotation(90),
     transforms.Resize((224,224)),
     transforms.ToTensor(),
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
@@ -290,4 +291,4 @@ dataloaders_dict = {"train": train_loader, "val": val_loader}
 criterion = nn.CrossEntropyLoss()
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
-train_model(model, dataloaders_dict, criterion, optimizer, 20)
+train_model(model, dataloaders_dict, criterion, optimizer, 25)
